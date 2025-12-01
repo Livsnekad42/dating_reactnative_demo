@@ -1,20 +1,61 @@
+// App.tsx (UPDATED with Chat navigation)
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Provider } from 'react-redux';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
+import {registerForPushNotificationsAsync} from "@/features/notifications/notificationSlice";
+import {store} from "@/shared/lib/store/store";
+import {SwipeScreen} from "@/shared/ui/swipe/SwipeScreen";
+import {ProfileScreen} from "@/shared/ui/profile/ProfileScreen";
+import ChatListScreen from "@/shared/ui/chat/ChatListScreen";
+import MatchesListScreen from "@/shared/ui/matches/MatchesListScreen";
+
+// TODO: Fix the navigation
+const Tab = createBottomTabNavigator();
+
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    useEffect(() => {
+        registerForPushNotificationsAsync();
+    }, []);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+    return (
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <Provider store={store}>
+                <NavigationContainer>
+                    <StatusBar style="dark" />
+                    <Tab.Navigator
+                        screenOptions={({ route }) => ({
+                            tabBarIcon: ({ focused, color, size }) => {
+                                let iconName: keyof typeof Ionicons.glyphMap;
+
+                                if (route.name === 'Swipe') {
+                                    iconName = focused ? 'flame' : 'flame-outline';
+                                } else if (route.name === 'Matches') {
+                                    iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
+                                } else if (route.name === 'Profile') {
+                                    iconName = focused ? 'person' : 'person-outline';
+                                } else {
+                                    iconName = 'help-outline';
+                                }
+
+                                return <Ionicons name={iconName} size={size} color={color} />;
+                            },
+                            tabBarActiveTintColor: '#FF6B6B',
+                            tabBarInactiveTintColor: 'gray',
+                            headerShown: false,
+                        })}
+                    >
+                        <Tab.Screen name="Swipe" component={SwipeScreen} />
+                        <Tab.Screen name="Matches" component={MatchesListScreen} />
+                        <Tab.Screen name="Chats" component={ChatListScreen} />
+                        <Tab.Screen name="Profile" component={ProfileScreen} />
+                    </Tab.Navigator>
+                </NavigationContainer>
+            </Provider>
+        </GestureHandlerRootView>
+    );
+}
