@@ -12,11 +12,21 @@ import {SwipeScreen} from "@/shared/ui/swipe/SwipeScreen";
 import {ProfileScreen} from "@/shared/ui/profile/ProfileScreen";
 import ChatListScreen from "@/shared/ui/chat/ChatListScreen";
 import MatchesListScreen from "@/shared/ui/matches/MatchesListScreen";
+import ChatScreen from "@/shared/ui/chat/ChatScreen";
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
 
 // TODO: Fix the navigation
 const Tab = createBottomTabNavigator();
+const ChatsStack = createNativeStackNavigator();
 
-
+function ChatsStackNavigator() {
+    return (
+        <ChatsStack.Navigator screenOptions={{ headerShown: false }}>
+            <ChatsStack.Screen name="ChatsList" component={ChatListScreen} />
+            <ChatsStack.Screen name="Chat" component={ChatScreen} />
+        </ChatsStack.Navigator>
+    );
+}
 export default function App() {
     useEffect(() => {
         registerForPushNotificationsAsync();
@@ -51,7 +61,7 @@ export default function App() {
                     >
                         <Tab.Screen name="Swipe" component={SwipeScreen} />
                         <Tab.Screen name="Matches" component={MatchesListScreen} />
-                        <Tab.Screen name="Chats" component={ChatListScreen} />
+                        <Tab.Screen name="Chats" component={ChatsStackNavigator} />
                         <Tab.Screen name="Profile" component={ProfileScreen} />
                     </Tab.Navigator>
                 </NavigationContainer>

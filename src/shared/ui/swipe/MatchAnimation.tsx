@@ -5,12 +5,15 @@ import Animated, {
     useAnimatedStyle,
     withSpring,
     withSequence,
-    withDelay, runOnJS,
+    runOnJS,
 } from 'react-native-reanimated';
-import {MatchesListNavigationProp, Profile} from "@/shared/lib/types/profile";
-import {useNavigation} from "@react-navigation/native";
+import {ChatsStackParamList, Profile, RootTabParamList} from "@/shared/lib/types/profile";
+import {NativeStackNavigationProp} from "@react-navigation/native-stack";
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { width: SCREEN_WIDTH, } = Dimensions.get('window');
+type Nav = BottomTabNavigationProp<RootTabParamList, 'Swipe'>;
 
 interface MatchAnimationProps {
     profile: Profile;
@@ -20,7 +23,10 @@ interface MatchAnimationProps {
 export const MatchAnimation: React.FC<MatchAnimationProps> = ({ profile, onClose }) => {
     const scale = useSharedValue(0);
     const opacity = useSharedValue(0);
-    const navigation = useNavigation<MatchesListNavigationProp>();
+
+
+
+    const navigation = useNavigation<Nav>();
 
     useEffect(() => {
         // Entrance animation
@@ -38,7 +44,10 @@ export const MatchAnimation: React.FC<MatchAnimationProps> = ({ profile, onClose
 
     const handleSendMessage = () => {
         runOnJS(onClose)();
-        navigation.navigate('Chat', {matchId: profile.id});
+        navigation.navigate('Chats', {
+            screen: 'Chat',
+            params: { chatId: '1' }
+        });
         // Navigate to chat would go here
     };
 

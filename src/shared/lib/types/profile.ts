@@ -1,4 +1,6 @@
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
+import {NavigatorScreenParams} from "@react-navigation/native";
+import {BottomTabNavigationProp} from "@react-navigation/bottom-tabs";
 
 export interface Profile {
     id: string;
@@ -34,6 +36,14 @@ export interface ChatState {
     typing: Record<string, boolean>;
 }
 
+
+export type RootTabParamList = {
+    Swipe: undefined;
+    Matches: undefined;
+    Chats: NavigatorScreenParams<ChatsStackParamList>;
+    Profile: undefined;
+};
+
 export type MatchesStackParamList = {
     MatchesList: undefined;
     Chat: { matchId: string };
@@ -42,4 +52,24 @@ export type MatchesStackParamList = {
 export type MatchesListNavigationProp = NativeStackNavigationProp<
     MatchesStackParamList,
     'MatchesList'
+>;
+
+export type ChatListNavigationProp = NativeStackNavigationProp<
+    MatchesStackParamList,
+    'MatchesList'
+>;
+
+export type ChatsStackParamList = {
+    ChatsList: undefined;
+    Chat: { chatId: string };
+};
+
+export type ChatsNavigationProp = NativeStackNavigationProp<
+    ChatsStackParamList,
+    'ChatsList'
+>;
+
+export type RootTabNavProp = BottomTabNavigationProp<
+    RootTabParamList,
+    'Chats'
 >;

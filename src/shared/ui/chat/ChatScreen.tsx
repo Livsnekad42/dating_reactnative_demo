@@ -46,10 +46,15 @@ const ChatScreen: React.FC = () => {
     );
 
     // Get messages from Redux or API
-    const localMessages = useAppSelector(state => state.chat.conversations[matchId]);
+    const localMessages = useAppSelector(state => state.chat.conversations[matchId]) || [];
     const { data: apiMessages, isLoading } = useGetChatMessagesQuery(matchId);
 
     // Combine local + API messages
+    // const allMessages = [...(apiMessages || []), ...localMessages].sort(
+    //     (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    // );
+    console.log('localMessages', localMessages);
+    console.log('apiMessages', apiMessages);
     const allMessages = [...(apiMessages || []), ...localMessages].sort(
         (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
     );
